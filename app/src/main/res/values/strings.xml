@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Films</string>
+    <string name="click_but_1">Кликнули на кнопку</string>
 </resources>
