@@ -1,45 +1,46 @@
 package com.lessons.films
 
 import android.os.Bundle
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.lessons.films.view.FilmsFavorite
+import com.lessons.films.view.HomeFragment
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        init()
-    }
+        //
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-    fun init() {
-        findViewById<MaterialButton>(R.id.but_1).setOnClickListener {
-            Toast.makeText(this, R.string.click_but_1, Toast.LENGTH_SHORT).show()
-            var us = User("Иван", 34, "Новосибирск")
-            var text = us.toString() + "\n" + us.copy(adress = "Владивосток")
-            val tv = findViewById<TextView>(R.id.tv_1)
-            addText(tv, text + "\n")
+        val navController = findNavController(R.id.nav_host_fragment)
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        val appBarConfiguration = AppBarConfiguration(setOf(
+                R.id.navigation_films, R.id.navigation_favorites))
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
+        //
 
-            for (i in 1..10) {
-                addText(tv, i.toString() + " ")
+        val bnv: BottomNavigationView = findViewById(R.id.nav_view)
+        bnv.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.action_films ->
+                    supportFragmentManager.beginTransaction()
+                            .replace(R.id.nav_host_fragment, HomeFragment.newInstance())
+                            .commitNow()
+                R.id.action_favorites -> {
+                    supportFragmentManager.beginTransaction()
+                            .replace(R.id.nav_host_fragment, FilmsFavorite.newInstance())
+                            .commitNow()
+                }
             }
-
-            addText(tv, "\n")
-            for (i in 1..100 step 10) {
-                addText(tv, i.toString() + " ")
-            }
-
-            addText(tv, "\n")
-            val auto = Auto("ВАЗ")
-            addText(tv, auto.brand + "\n")
-            auto.name = "Жигули"
-            addText(tv, auto.name + "\n")
-
-            for (i in listOf("q", "w", "e", "r", "t", "y"))
-                addText(tv, i)
+            true
         }
     }
-
-    fun addText(tv: TextView, text: String) = with(tv) { this.text = this.text.toString() + text }
 }

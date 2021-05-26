@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Films</string>
     <string name="click_but_1">Кликнули на кнопку</string>
+    <string name="title_list">Список фильмов</string>
+    <string name="favorites">Избранное</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_sort_by_vote">Сортировать по рейтингу</string>
+    <string name="action_sort_by_date">Сортировать по дате выхода</string>
+    <string name="error">Ошибка</string>
+    <string name="reload_again">Обновить</string>
+    <string name="ready">Готово</string>
+    <string name="now_playing">Сейчас</string>
+    <string name="upcoming">Скоро</string>
+    <string name="temp">Откроется экран информации</string>
 </resources>
