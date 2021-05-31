@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -20,12 +21,13 @@ import com.lessons.films.model.Film
 open class FilmsLenta : Fragment() {
     private val filmsAdapter = FilmsAdapter()
     var binding: FilmsLentaBinding? = null
+    lateinit var viewModel: MainViewModel
+    protected var appState: AppState? = null
 
     companion object {
         fun newInstance() = FilmsLenta()
     }
 
-    lateinit var viewModel: MainViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -41,10 +43,18 @@ open class FilmsLenta : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.stateLiveData.observe(viewLifecycleOwner) { renderData(it) }
-        if (savedInstanceState == null) {
+        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
+        setObserve()
+        if (appState == null) {
             requestData()
+        }
+    }
+
+    open fun setObserve() {
+        viewModel.stateLiveData.observe(viewLifecycleOwner) {
+            appState = it
+            renderData(it)
         }
     }
 
@@ -64,7 +74,10 @@ open class FilmsLenta : Fragment() {
         filmsList.layoutManager = getRecyclerViewLayout()
         filmsAdapter.clickListener = object : OnFilmClicked {
             override fun onFilmClicked(film: Film) {
-                Toast.makeText(requireContext(), R.string.temp, Toast.LENGTH_SHORT).show()
+                val bundle = Bundle()
+                bundle.putParcelable(FilmInfoFragment.BUNDLE_EXTRA, film)
+                val navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment)
+                navController.navigate(R.id.navigation_film_info, bundle)
             }
 
             override fun onFavoriteReverse(film: Film) {
@@ -76,7 +89,7 @@ open class FilmsLenta : Fragment() {
         filmsList.adapter = filmsAdapter
     }
 
-    private fun renderData(appState: AppState) {
+    protected fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
                 filmsAdapter.setData(appState.filmsData)
@@ -99,5 +112,10 @@ open class FilmsLenta : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+    }
+
+    override fun onDestroy() {
+        filmsAdapter.removeListener()
+        super.onDestroy()
     }
 }

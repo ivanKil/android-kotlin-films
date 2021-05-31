@@ -15,6 +15,12 @@
         android:id="@+id/navigation_favorites"
         android:name="com.lessons.films.view.FilmsFavorite"
         android:label="@string/favorites"
-        tools:layout="@layout/films_fragment" />
+        tools:layout="@layout/films_lenta" />
+
+    <fragment
+        android:id="@+id/navigation_film_info"
+        android:name="com.lessons.films.view.FilmInfoFragment"
+        android:label="@string/favorites"
+        tools:layout="@layout/film_info_fragment" />
 
 </navigation>

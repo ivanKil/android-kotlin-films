@@ -71,4 +71,8 @@ class FilmsAdapter : RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>() {
         itemBinding = null
         super.onDetachedFromRecyclerView(recyclerView)
     }
+
+    fun removeListener() {
+        clickListener = null
+    }
 }

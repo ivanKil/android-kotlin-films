@@ -1,18 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/films_fragment_id"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/info_padding"
+    android:background="@color/fragmentBackground">
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/info_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Побег из Шоушенка"
+        android:textSize="@dimen/tv_add_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/info_favorite_img" />
+
+    <ImageView
+        android:id="@+id/info_favorite_img"
+        android:layout_width="@dimen/favorite_size"
+        android:layout_height="@dimen/favorite_size"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/favorites_24" />
+
+    <ImageView
+        android:id="@+id/info_poster"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent=".4"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".4"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/info_name"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:background="@drawable/ic_launcher_background"
+        android:paddingEnd="@dimen/info_padding"
+        app:layout_constraintBottom_toTopOf="@id/info_scroll" />
+
+    <TextView
+        android:id="@+id/info_genge"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent=".6"
+        android:layout_height="wrap_content"
+        tools:text="Боевик, Комедия, Мультфильм, Приключения"
+        app:layout_constraintStart_toEndOf="@id/info_poster"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/info_poster"
+        android:layout_width="0dp" />
+
+    <TextView
+        android:id="@+id/info_run_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MainFragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:text="117 мин"
+        app:layout_constraintStart_toEndOf="@id/info_poster"
+        app:layout_constraintTop_toBottomOf="@id/info_genge" />
 
+    <TextView
+        android:id="@+id/info_vote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="3.6"
+        android:textSize="@dimen/vote_info_size"
+        app:layout_constraintStart_toEndOf="@id/info_poster"
+        app:layout_constraintTop_toBottomOf="@id/info_run_time" />
+
+    <ImageView
+        android:id="@+id/img_star"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/info_vote"
+        app:layout_constraintTop_toBottomOf="@id/info_run_time"
+        android:background="@drawable/star_24" />
+
+    <TextView
+        android:id="@+id/info_budget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Бюджет: 234 000 000 $"
+        android:textSize="@dimen/vote_info_size"
+        app:layout_constraintStart_toEndOf="@id/info_poster"
+        app:layout_constraintTop_toBottomOf="@id/img_star" />
+
+    <TextView
+        android:id="@+id/info_relese_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Дата выхода: 12.03.2010"
+        android:textSize="@dimen/vote_info_size"
+        app:layout_constraintStart_toEndOf="@id/info_poster"
+        app:layout_constraintTop_toBottomOf="@id/info_budget" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/info_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/info_poster">
+
+        <TextView
+            android:id="@+id/info_overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения."
+            android:textSize="@dimen/vote_info_size" />
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

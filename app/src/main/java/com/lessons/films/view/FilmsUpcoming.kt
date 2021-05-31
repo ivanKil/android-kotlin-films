@@ -8,4 +8,11 @@ class FilmsUpcoming : FilmsLenta() {
     }
 
     override fun requestData() = viewModel.requestUpcomingFilms()
+
+    override fun setObserve() {
+        viewModel.stateLiveDataUpcoming.observe(viewLifecycleOwner) {
+            appState = it
+            renderData(it)
+        }
+    }
 }

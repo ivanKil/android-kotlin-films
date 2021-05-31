@@ -12,4 +12,7 @@
     <string name="now_playing">Сейчас</string>
     <string name="upcoming">Скоро</string>
     <string name="temp">Откроется экран информации</string>
+    <string name="budget">Бюджет: %1$s$</string>
+    <string name="release_date">Дата выхода: %1$s</string>
+    <string name="run_time">%1$s мин.</string>
 </resources>

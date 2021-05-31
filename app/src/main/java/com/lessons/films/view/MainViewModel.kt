@@ -10,15 +10,16 @@ import java.lang.Thread.sleep
 
 class MainViewModel : ViewModel() {
     val stateLiveData = MutableLiveData<AppState>()
+    val stateLiveDataUpcoming = MutableLiveData<AppState>()
     private val repository: Repository = MockRepository()
     val showInfoLiveData = MutableLiveData<Film>()
     fun requestNowPlayingFilms() {
         stateLiveData.value = AppState.Loading
         Thread {
             sleep(1000)
-            when ((0..1).random()) {
-                0 -> stateLiveData.postValue(AppState.Success(repository.getNowPlayingFilms()))
-                1 -> stateLiveData.postValue(AppState.Error(Throwable("Произошла ошибка")))
+            when ((0..10).random()) {
+                0 -> stateLiveData.postValue(AppState.Error(Throwable("Произошла ошибка")))
+                else -> stateLiveData.postValue(AppState.Success(repository.getNowPlayingFilms()))
             }
         }.start()
     }
@@ -33,12 +34,12 @@ class MainViewModel : ViewModel() {
     }
 
     fun requestUpcomingFilms() {
-        stateLiveData.value = AppState.Loading
+        stateLiveDataUpcoming.value = AppState.Loading
         Thread {
             sleep(1000)
             when ((0..1).random()) {
-                0 -> stateLiveData.postValue(AppState.Success(repository.getUpcomingFilms()))
-                1 -> stateLiveData.postValue(AppState.Error(Throwable("Произошла ошибка")))
+                0 -> stateLiveDataUpcoming.postValue(AppState.Success(repository.getUpcomingFilms()))
+                1 -> stateLiveDataUpcoming.postValue(AppState.Error(Throwable("Произошла ошибка")))
             }
         }.start()
     }
