@@ -43,16 +43,16 @@ class MockRepository : Repository {
                     20400090)
     )
     var upcoming: MutableList<Film> = mutableListOf(
-            Film(3, "Калина красная", "https://cdn.pixabay.com/photo/2020/03/25/09/30/belgium-4966646_960_720.jpg",
+            Film(13, "Калина красная", "https://cdn.pixabay.com/photo/2020/03/25/09/30/belgium-4966646_960_720.jpg",
                     false, 0.0, Date(1212121212121L), listOf("Комедия", "Приключения"), 117,
                     20400090),
-            Film(1, "Фиксики", "https://cdn.pixabay.com/photo/2020/12/25/11/57/flamingos-5859192_1280.jpg",
+            Film(14, "Фиксики", "https://cdn.pixabay.com/photo/2020/12/25/11/57/flamingos-5859192_1280.jpg",
                     true, 0.0, Date(1212121212121L), listOf("Боевик", "Приключения", "Драма"), 117,
                     20400090),
-            Film(2, "Фильм1", "https://cdn.pixabay.com/photo/2020/04/17/16/48/marguerite-5056063_1280.jpg",
+            Film(15, "Фильм1", "https://cdn.pixabay.com/photo/2020/04/17/16/48/marguerite-5056063_1280.jpg",
                     true, 0.0, Date(1212121212121L), listOf("Комедия", "Боевик", "Драма"), 137,
                     20400090),
-            Film(2, "Фильм2", "https://cdn.pixabay.com/photo/2020/04/17/16/48/marguerite-5056063_1280.jpg",
+            Film(16, "Фильм2", "https://cdn.pixabay.com/photo/2020/04/17/16/48/marguerite-5056063_1280.jpg",
                     false, 0.0, Date(1212121212121L), listOf("Комедия", "Приключения", "Драма"), 117,
                     20400090)
     )
@@ -62,7 +62,12 @@ class MockRepository : Repository {
 
     override fun updateFilm(film: Film) {
         val ind = list.indexOf(list.find { it.id == film.id })
-        list[ind] = film
+        if (ind != -1)
+            list[ind] = film
+        else {
+            val ind = upcoming.indexOf(upcoming.find { it.id == film.id })
+            upcoming[ind] = film
+        }
     }
 
     override fun getUpcomingFilms() = unmodifiableList(upcoming)

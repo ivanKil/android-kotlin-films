@@ -21,13 +21,8 @@ import com.lessons.films.model.Film
 open class FilmsLenta : Fragment() {
     private val filmsAdapter = FilmsAdapter()
     var binding: FilmsLentaBinding? = null
-    lateinit var viewModel: MainViewModel
+    protected val viewModel: MainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
     protected var appState: AppState? = null
-
-    companion object {
-        fun newInstance() = FilmsLenta()
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -35,20 +30,14 @@ open class FilmsLenta : Fragment() {
         return binding!!.root;
     }
 
-    open fun setTitle() {
-        binding!!.tvTitleList.setText(R.string.now_playing)
-    }
+    open fun setTitle() = binding!!.tvTitleList.setText(R.string.now_playing)
 
     open fun requestData() = viewModel.requestNowPlayingFilms()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-
         setObserve()
-        if (appState == null) {
-            requestData()
-        }
+        appState ?: requestData()
     }
 
     open fun setObserve() {
@@ -73,19 +62,15 @@ open class FilmsLenta : Fragment() {
         setTitle()
         filmsList.layoutManager = getRecyclerViewLayout()
         filmsAdapter.clickListener = object : OnFilmClicked {
-            override fun onFilmClicked(film: Film) {
-                val bundle = Bundle()
-                bundle.putParcelable(FilmInfoFragment.BUNDLE_EXTRA, film)
-                val navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment)
-                navController.navigate(R.id.navigation_film_info, bundle)
-            }
+            override fun onFilmClicked(film: Film) =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                            .navigate(R.id.navigation_film_info,
+                                    Bundle().apply { putParcelable(FilmInfoFragment.BUNDLE_EXTRA, film) })
 
-            override fun onFavoriteReverse(film: Film) {
-                val f = film.copy()
-                f.favorite = !film.favorite
-                viewModel.updateFilm(f)
-            }
+            override fun onFavoriteReverse(film: Film) =
+                    viewModel.updateFilm(film.copy().apply { favorite = !favorite })
         }
+
         filmsList.adapter = filmsAdapter
     }
 
@@ -102,11 +87,9 @@ open class FilmsLenta : Fragment() {
             is AppState.Error -> {
                 binding!!.filmsProgress.visibility = View.GONE
                 Snackbar.make(requireView(), resources.getString(R.string.error) + ": " + appState.error.message, Snackbar.LENGTH_INDEFINITE)
-                        .setAction(resources.getString(R.string.reload_again)) { requestData() }
-                        .show()
+                        .setAction(resources.getString(R.string.reload_again)) { requestData() }.show()
             }
         }
-
     }
 
     override fun onDestroyView() {

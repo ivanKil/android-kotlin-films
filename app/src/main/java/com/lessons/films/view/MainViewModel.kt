@@ -11,8 +11,9 @@ import java.lang.Thread.sleep
 class MainViewModel : ViewModel() {
     val stateLiveData = MutableLiveData<AppState>()
     val stateLiveDataUpcoming = MutableLiveData<AppState>()
+    val stateLiveDataFavorites = MutableLiveData<AppState>()
     private val repository: Repository = MockRepository()
-    val showInfoLiveData = MutableLiveData<Film>()
+
     fun requestNowPlayingFilms() {
         stateLiveData.value = AppState.Loading
         Thread {
@@ -27,10 +28,8 @@ class MainViewModel : ViewModel() {
     fun updateFilm(film: Film) {
         repository.updateFilm(film)
         stateLiveData.value = AppState.Success(repository.getNowPlayingFilms())
-    }
-
-    fun showInfo(film: Film) {
-        showInfoLiveData.value = film
+        stateLiveDataFavorites.value = (AppState.Success((repository.getUpcomingFilms() + repository.getNowPlayingFilms()).filter { it.favorite }))
+        stateLiveDataUpcoming.value = AppState.Success(repository.getUpcomingFilms())
     }
 
     fun requestUpcomingFilms() {
@@ -48,8 +47,7 @@ class MainViewModel : ViewModel() {
         stateLiveData.value = AppState.Loading
         Thread {
             sleep(1000)
-            stateLiveData.postValue(AppState.Success((repository.getUpcomingFilms() + repository.getNowPlayingFilms()).filter { it.favorite }))
-
+            stateLiveDataFavorites.postValue(AppState.Success((repository.getUpcomingFilms() + repository.getNowPlayingFilms()).filter { it.favorite }))
         }.start()
     }
 }

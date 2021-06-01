@@ -24,28 +24,24 @@ class FilmsAdapter : RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>() {
     inner class FilmsViewHolder(private val itemBinding: ItemFilmBinding) : RecyclerView.ViewHolder(itemBinding.root) {
         private val format = SimpleDateFormat("yyyy")
 
-
         init {
             itemBinding.poster.setOnClickListener { clickListener?.onFilmClicked(films.get(getAdapterPosition())) }
             itemBinding.favoriteImg.setOnClickListener { clickListener?.onFavoriteReverse(films.get(getAdapterPosition())) }
         }
 
         fun bind(film: Film) {
-            itemBinding.title.setText(film.name)
-            itemBinding.tvReleaseDate.setText(format.format(film.releaseDate))
-
-            if (film.voteAverage == 0.0)
-                itemBinding.imgStar.visibility = View.GONE
-            else
-                itemBinding.tvVote.setText(film.voteAverage.toString())
-            if (film.favorite)
-                itemBinding.favoriteImg.setImageResource(R.drawable.favorite_fill_24)
-            Glide.with(itemBinding.poster)
-                    .load(film.poster).centerCrop()
-                    .into(itemBinding.poster)
+            with(itemBinding) {
+                title.setText(film.name)
+                tvReleaseDate.setText(format.format(film.releaseDate))
+                if (film.voteAverage == 0.0)
+                    imgStar.visibility = View.GONE
+                else
+                    tvVote.setText(film.voteAverage.toString())
+                if (film.favorite)
+                    favoriteImg.setImageResource(R.drawable.favorite_fill_24)
+                Glide.with(poster).load(film.poster).centerCrop().into(poster)
+            }
         }
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmsViewHolder {
@@ -53,15 +49,12 @@ class FilmsAdapter : RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>() {
         return FilmsViewHolder(itemBinding!!)
     }
 
-    override fun onBindViewHolder(holder: FilmsViewHolder, position: Int) {
-        holder.bind(films[position])
-    }
+    override fun onBindViewHolder(holder: FilmsViewHolder, position: Int) = holder.bind(films[position])
 
     override fun getItemCount() = films.size
 
     fun setData(films: List<Film>) {
-        val callback = FilmsDiffUtil(this.films, films)
-        val result = DiffUtil.calculateDiff(callback)
+        val result = DiffUtil.calculateDiff(FilmsDiffUtil(this.films, films))
         this.films.clear()
         this.films.addAll(films)
         result.dispatchUpdatesTo(this)

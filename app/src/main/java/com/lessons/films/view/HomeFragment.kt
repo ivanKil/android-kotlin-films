@@ -11,20 +11,12 @@ import androidx.fragment.app.Fragment
 import com.lessons.films.R
 
 class HomeFragment : Fragment() {
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        val rootView = inflater.inflate(R.layout.films_fragment, container, false)
-        return rootView
-    }
+                              savedInstanceState: Bundle?) =
+            inflater.inflate(R.layout.films_fragment, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initTopMenu(view)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = initTopMenu(view)
 
     private fun initTopMenu(view: View) {
         val toolbar: Toolbar = view.findViewById(R.id.toolbar)
@@ -42,16 +34,17 @@ class HomeFragment : Fragment() {
             }
         })
         toolbar.setOnMenuItemClickListener { item: MenuItem ->
-            if (item.itemId == R.id.action_sort_by_name) {
-                //viewModel.sortByName()
-                return@setOnMenuItemClickListener true
-            }
-            if (item.itemId == R.id.action_sort_by_date) {
-                //viewModel.sortByDate()
-                return@setOnMenuItemClickListener true
+            when (item.itemId) {
+                R.id.action_sort_by_name -> {
+                    //viewModel.sortByName()
+                    return@setOnMenuItemClickListener true
+                }
+                R.id.action_sort_by_date -> {
+                    //viewModel.sortByDate()
+                    return@setOnMenuItemClickListener true
+                }
             }
             false
         }
     }
-
 }
