@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -16,6 +15,7 @@ import com.lessons.films.R
 import com.lessons.films.databinding.FilmsLentaBinding
 import com.lessons.films.model.AppState
 import com.lessons.films.model.Film
+import com.lessons.films.snackBarReady
 
 
 open class FilmsLenta : Fragment() {
@@ -79,7 +79,8 @@ open class FilmsLenta : Fragment() {
             is AppState.Success -> {
                 filmsAdapter.setData(appState.filmsData)
                 binding!!.filmsProgress.visibility = View.GONE
-                Toast.makeText(requireContext(), resources.getString(R.string.ready), Toast.LENGTH_SHORT)
+                //Toast.makeText(requireContext(), resources.getString(R.string.ready), Toast.LENGTH_SHORT)
+                requireView().snackBarReady()
             }
             is AppState.Loading -> {
                 binding!!.filmsProgress.visibility = View.VISIBLE

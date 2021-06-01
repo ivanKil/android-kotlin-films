@@ -12,6 +12,7 @@ import com.lessons.films.databinding.FilmInfoFragmentBinding
 import com.lessons.films.model.AppState
 import com.lessons.films.model.Film
 import com.lessons.films.model.overviewTemp
+import com.lessons.films.snackBarIntRes
 import java.text.SimpleDateFormat
 
 class FilmInfoFragment : Fragment() {
@@ -38,6 +39,7 @@ class FilmInfoFragment : Fragment() {
             setData(filmArg)
             binding!!.infoFavoriteImg.setOnClickListener {
                 viewModel.updateFilm(this.film!!.copy().apply { favorite = !favorite })
+                requireView().snackBarIntRes(R.string.click_heart)
             }
             viewModel.stateLiveData.observe(viewLifecycleOwner) { appState ->
                 when (appState) {

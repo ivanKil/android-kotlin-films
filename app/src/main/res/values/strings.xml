@@ -15,4 +15,5 @@
     <string name="budget">Бюджет: %1$s$</string>
     <string name="release_date">Дата выхода: %1$s</string>
     <string name="run_time">%1$s мин.</string>
+    <string name="click_heart">Кликнули на сердечко</string>
 </resources>
