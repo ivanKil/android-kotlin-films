@@ -4,50 +4,56 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lessons.films.model.AppState
 import com.lessons.films.model.Film
-import com.lessons.films.model.MockRepository
+import com.lessons.films.model.FilmDetail
 import com.lessons.films.model.Repository
-import java.lang.Thread.sleep
+import com.lessons.films.network.MovieRepository
+import com.lessons.films.network.RetrofitServices
 
 class MainViewModel : ViewModel() {
     val stateLiveData = MutableLiveData<AppState>()
     val stateLiveDataUpcoming = MutableLiveData<AppState>()
     val stateLiveDataFavorites = MutableLiveData<AppState>()
-    private val repository: Repository = MockRepository()
+    val liveDataFilmDetail = MutableLiveData<FilmDetail>()
+    private val repository: Repository = MovieRepository(RetrofitServices.create())
+    val liveDataError = MutableLiveData<String>()
 
-    fun requestNowPlayingFilms() {
+    fun requestNowPlayingFilms(filmName: String? = null) {
         stateLiveData.value = AppState.Loading
-        Thread {
-            sleep(1000)
-            when ((0..10).random()) {
-                0 -> stateLiveData.postValue(AppState.Error(Throwable("Произошла ошибка")))
-                else -> stateLiveData.postValue(AppState.Success(repository.getNowPlayingFilms()))
-            }
-        }.start()
+        repository.getNowPlayingFilms().subscribe(
+                { stateLiveData.postValue(AppState.Success(it)) },
+                { stateLiveData.value = AppState.Error(it) })
     }
 
     fun updateFilm(film: Film) {
         repository.updateFilm(film)
-        stateLiveData.value = AppState.Success(repository.getNowPlayingFilms())
-        stateLiveDataFavorites.value = (AppState.Success((repository.getUpcomingFilms() + repository.getNowPlayingFilms()).filter { it.favorite }))
-        stateLiveDataUpcoming.value = AppState.Success(repository.getUpcomingFilms())
+        repository.getNowPlayingFilms().subscribe({
+            stateLiveData.value = AppState.Success(it)
+        }, { stateLiveData.value = AppState.Error(it) })
+
+        repository.getUpcomingFilms().subscribe({
+            stateLiveDataUpcoming.value = AppState.Success(it)
+        }, { stateLiveDataUpcoming.value = AppState.Error(it) })
     }
 
     fun requestUpcomingFilms() {
         stateLiveDataUpcoming.value = AppState.Loading
-        Thread {
-            sleep(1000)
-            when ((0..1).random()) {
-                0 -> stateLiveDataUpcoming.postValue(AppState.Success(repository.getUpcomingFilms()))
-                1 -> stateLiveDataUpcoming.postValue(AppState.Error(Throwable("Произошла ошибка")))
-            }
-        }.start()
+        repository.getUpcomingFilms().subscribe(
+                { stateLiveDataUpcoming.postValue(AppState.Success(it)) },
+                { stateLiveDataUpcoming.value = AppState.Error(it) })
     }
 
     fun requestFavoritesFilms() {
-        stateLiveData.value = AppState.Loading
-        Thread {
-            sleep(1000)
-            stateLiveDataFavorites.postValue(AppState.Success((repository.getUpcomingFilms() + repository.getNowPlayingFilms()).filter { it.favorite }))
-        }.start()
+    }
+
+    fun requestFilmDetail(filmId: Int) {
+        repository.getFilmDetails(filmId).subscribe(
+                { liveDataFilmDetail.postValue(it) },
+                { liveDataError.value = it.message })
+    }
+
+    fun searchFilms(s: String) {
+        repository.searchFilms(s).subscribe({
+            stateLiveData.value = AppState.Success(it)
+        }, { stateLiveData.value = AppState.Error(it) })
     }
 }

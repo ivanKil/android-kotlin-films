@@ -9,16 +9,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.lessons.films.R
 import com.lessons.films.databinding.FilmInfoFragmentBinding
-import com.lessons.films.model.AppState
-import com.lessons.films.model.Film
-import com.lessons.films.model.overviewTemp
+import com.lessons.films.model.FilmDetail
+import com.lessons.films.network.RetrofitServices
+import com.lessons.films.snackBarError
 import com.lessons.films.snackBarIntRes
 import java.text.SimpleDateFormat
 
 class FilmInfoFragment : Fragment() {
     private var binding: FilmInfoFragmentBinding? = null
     private val format = SimpleDateFormat("dd.MM.yyyy")
-    private var film: Film? = null
+    private var film: FilmDetail? = null
     private val viewModel: MainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
 
     companion object {
@@ -34,34 +34,41 @@ class FilmInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val filmArg = arguments?.getParcelable<Film>(BUNDLE_EXTRA)
+        val filmArg = arguments?.getParcelable<FilmDetail>(BUNDLE_EXTRA)
         filmArg?.let { fimArg ->
             setData(filmArg)
             binding!!.infoFavoriteImg.setOnClickListener {
-                viewModel.updateFilm(this.film!!.copy().apply { favorite = !favorite })
+                //viewModel.updateFilm(this.film!!.copy().apply { favorite = !favorite })
                 requireView().snackBarIntRes(R.string.click_heart)
             }
-            viewModel.stateLiveData.observe(viewLifecycleOwner) { appState ->
-                when (appState) {
-                    is AppState.Success ->
-                        appState.filmsData.find { it.id == filmArg.id }?.let { setData(it) }
-                }
-            }
+//            viewModel.stateLiveData.observe(viewLifecycleOwner) { appState ->
+//                when (appState) {
+//                    is AppState.Success ->
+//                        appState.filmsData.find { it.id == filmArg.id }?.let { setData(it) }
+//                }
+//            }
+            viewModel.requestFilmDetail(filmArg.id)
         }
+        viewModel.liveDataFilmDetail.observe(viewLifecycleOwner, ::setData)
+
+        viewModel.liveDataError.observe(viewLifecycleOwner, view::snackBarError)
     }
 
-    fun setData(film: Film) {
+    private fun setData(film: FilmDetail) {
         this.film = film
         binding?.apply {
             infoName.text = film.name
-            infoBudget.text = String.format(getResources().getString(R.string.budget), film.budget.toString())
-            infoGenge.text = film.genres?.joinToString()
+            infoBudget.text =
+                    String.format(getResources().getString(R.string.budget),
+                            if (film.budget == 0) resources.getString(R.string.dont_know)
+                            else film.budget.toString() + "$")
+            infoGenge.text = film.genres?.map { it.name }?.joinToString()
             infoOverview.text = film.overview
-            Glide.with(infoPoster).load(film.poster).centerCrop().into(infoPoster)
+            Glide.with(infoPoster).load(RetrofitServices.POSTER_BASE_URL + film.poster).centerCrop().into(infoPoster)
             infoReleseDate.text = String.format(getResources().getString(R.string.release_date), format.format(film.releaseDate))
             infoRunTime.text = String.format(getResources().getString(R.string.run_time), film.runTime.toString())
             infoVote.text = film.voteAverage.toString()
-            infoOverview.text = film.overviewTemp
+            infoOverview.text = film.overview
             infoFavoriteImg.setImageResource(if (film.favorite) R.drawable.favorite_fill_24 else R.drawable.favorites_24)
         }
     }

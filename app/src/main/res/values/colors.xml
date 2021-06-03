@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="card_background">#E2F6E3</color>
     <color name="fragmentBackground">#FFFFFF</color>
+    <color name="red">#F44336</color>
 
 </resources>

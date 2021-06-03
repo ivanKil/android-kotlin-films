@@ -17,3 +17,4 @@ local.properties
 /*.iml
 /.idea
 /target/**
+apikey.properties

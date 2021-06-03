@@ -15,7 +15,7 @@ import com.lessons.films.R
 import com.lessons.films.databinding.FilmsLentaBinding
 import com.lessons.films.model.AppState
 import com.lessons.films.model.Film
-import com.lessons.films.snackBarReady
+import com.lessons.films.model.FilmDetail
 
 
 open class FilmsLenta : Fragment() {
@@ -65,7 +65,8 @@ open class FilmsLenta : Fragment() {
             override fun onFilmClicked(film: Film) =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
                             .navigate(R.id.navigation_film_info,
-                                    Bundle().apply { putParcelable(FilmInfoFragment.BUNDLE_EXTRA, film) })
+                                    Bundle().apply { putParcelable(FilmInfoFragment.BUNDLE_EXTRA, FilmDetail.instanceFromfilm(film)) })
+
 
             override fun onFavoriteReverse(film: Film) =
                     viewModel.updateFilm(film.copy().apply { favorite = !favorite })
@@ -80,11 +81,9 @@ open class FilmsLenta : Fragment() {
                 filmsAdapter.setData(appState.filmsData)
                 binding!!.filmsProgress.visibility = View.GONE
                 //Toast.makeText(requireContext(), resources.getString(R.string.ready), Toast.LENGTH_SHORT)
-                requireView().snackBarReady()
+                //requireView().snackBarReady()
             }
-            is AppState.Loading -> {
-                binding!!.filmsProgress.visibility = View.VISIBLE
-            }
+            is AppState.Loading -> binding!!.filmsProgress.visibility = View.VISIBLE
             is AppState.Error -> {
                 binding!!.filmsProgress.visibility = View.GONE
                 Snackbar.make(requireView(), resources.getString(R.string.error) + ": " + appState.error.message, Snackbar.LENGTH_INDEFINITE)

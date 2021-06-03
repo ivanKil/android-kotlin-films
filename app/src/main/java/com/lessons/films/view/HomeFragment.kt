@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.lessons.films.R
 
 class HomeFragment : Fragment() {
-
+    protected val viewModel: MainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?) =
             inflater.inflate(R.layout.films_fragment, container, false)
@@ -24,13 +25,12 @@ class HomeFragment : Fragment() {
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
-                //viewModel.filterByName(s)
+                viewModel.searchFilms(s)
                 return true
             }
 
             override fun onQueryTextChange(s: String): Boolean {
-                //viewModel.filterByName(s)
-                return true
+                return false
             }
         })
         toolbar.setOnMenuItemClickListener { item: MenuItem ->

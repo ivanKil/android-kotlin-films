@@ -1,5 +1,6 @@
 package com.lessons.films.model
 
+import io.reactivex.Observable
 import java.util.*
 import java.util.Collections.unmodifiableList
 
@@ -58,7 +59,7 @@ class MockRepository : Repository {
     )
 
 
-    override fun getNowPlayingFilms() = unmodifiableList(list)
+    override fun getNowPlayingFilms() = Observable.fromCallable { unmodifiableList(list) }
 
     override fun updateFilm(film: Film) {
         val ind = list.indexOf(list.find { it.id == film.id })
@@ -70,6 +71,13 @@ class MockRepository : Repository {
         }
     }
 
-    override fun getUpcomingFilms() = unmodifiableList(upcoming)
+    override fun getUpcomingFilms() = Observable.fromCallable { unmodifiableList(upcoming) }
+    override fun getFilmDetails(filmId: Int): Observable<FilmDetail> {
+        TODO("Not yet implemented")
+    }
+
+    override fun searchFilms(filmName: String): Observable<List<Film>> {
+        TODO("Not yet implemented")
+    }
 
 }

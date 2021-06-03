@@ -3,6 +3,7 @@ package com.lessons.films
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -12,6 +13,12 @@ import com.google.android.material.snackbar.Snackbar
 
 fun View.snackBarInfo(string: String) =
         Snackbar.make(this, string, Snackbar.LENGTH_SHORT).show()
+
+fun View.snackBarError(string: String) {
+    var sb = Snackbar.make(this, "${resources.getString(R.string.error)} : $string", Snackbar.LENGTH_LONG)
+    sb.view.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+    sb.show()
+}
 
 fun View.snackBarReady() =
         Snackbar.make(this, resources.getString(R.string.ready), Snackbar.LENGTH_SHORT).show()

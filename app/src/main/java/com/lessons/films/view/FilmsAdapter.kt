@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.lessons.films.R
 import com.lessons.films.databinding.ItemFilmBinding
 import com.lessons.films.model.Film
+import com.lessons.films.network.RetrofitServices
 import java.text.SimpleDateFormat
 
 interface OnFilmClicked {
@@ -39,7 +40,7 @@ class FilmsAdapter : RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>() {
                     tvVote.setText(film.voteAverage.toString())
                 if (film.favorite)
                     favoriteImg.setImageResource(R.drawable.favorite_fill_24)
-                Glide.with(poster).load(film.poster).centerCrop().into(poster)
+                Glide.with(poster).load(RetrofitServices.POSTER_BASE_URL + film.poster).centerCrop().into(poster)
             }
         }
     }
