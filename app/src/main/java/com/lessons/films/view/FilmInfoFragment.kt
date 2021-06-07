@@ -1,16 +1,21 @@
 package com.lessons.films.view
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.lessons.films.R
 import com.lessons.films.databinding.FilmInfoFragmentBinding
 import com.lessons.films.model.FilmDetail
-import com.lessons.films.network.RetrofitServices
+import com.lessons.films.network.*
 import com.lessons.films.snackBarError
 import com.lessons.films.snackBarIntRes
 import java.text.SimpleDateFormat
@@ -20,6 +25,17 @@ class FilmInfoFragment : Fragment() {
     private val format = SimpleDateFormat("dd.MM.yyyy")
     private var film: FilmDetail? = null
     private val viewModel: MainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
+
+    private val loadResultsReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.getStringExtra(DETAILS_LOAD_ERROR) != null) {
+                requireView().snackBarError(intent.getStringExtra(DETAILS_LOAD_ERROR))
+            } else if (intent.getParcelableExtra<FilmDetail>(DETAILS_LOAD_RESULT_EXTRA) != null) {
+                setData(intent.getParcelableExtra(DETAILS_LOAD_RESULT_EXTRA))
+            }
+        }
+    }
+
 
     companion object {
         const val BUNDLE_EXTRA: String = "extra_film"
@@ -38,19 +54,19 @@ class FilmInfoFragment : Fragment() {
         filmArg?.let { fimArg ->
             setData(filmArg)
             binding!!.infoFavoriteImg.setOnClickListener {
-                //viewModel.updateFilm(this.film!!.copy().apply { favorite = !favorite })
                 requireView().snackBarIntRes(R.string.click_heart)
             }
-//            viewModel.stateLiveData.observe(viewLifecycleOwner) { appState ->
-//                when (appState) {
-//                    is AppState.Success ->
-//                        appState.filmsData.find { it.id == filmArg.id }?.let { setData(it) }
-//                }
-//            }
-            viewModel.requestFilmDetail(filmArg.id)
+
+            context?.let {
+                LocalBroadcastManager.getInstance(it)
+                        .registerReceiver(loadResultsReceiver, IntentFilter(DETAILS_INTENT_FILTER))
+
+                it.startService(Intent(it, DetailsService::class.java).apply {
+                    putExtra(FILM_ID_EXTRA, filmArg.id)
+                })
+            }
         }
         viewModel.liveDataFilmDetail.observe(viewLifecycleOwner, ::setData)
-
         viewModel.liveDataError.observe(viewLifecycleOwner, view::snackBarError)
     }
 
@@ -60,7 +76,7 @@ class FilmInfoFragment : Fragment() {
             infoName.text = film.name
             infoBudget.text =
                     String.format(getResources().getString(R.string.budget),
-                            if (film.budget == 0) resources.getString(R.string.dont_know)
+                            if (film.budget == null || film.budget == 0) resources.getString(R.string.dont_know)
                             else film.budget.toString() + "$")
             infoGenge.text = film.genres?.map { it.name }?.joinToString()
             infoOverview.text = film.overview
@@ -75,6 +91,7 @@ class FilmInfoFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        context?.let { LocalBroadcastManager.getInstance(it).unregisterReceiver(loadResultsReceiver) }
         binding = null
     }
 }

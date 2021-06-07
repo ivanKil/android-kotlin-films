@@ -17,4 +17,6 @@
     <string name="run_time">%1$s мин.</string>
     <string name="click_heart">Кликнули на сердечко</string>
     <string name="dont_know">неизвестно</string>
+    <string name="no_connect">Соединения нет</string>
+    <string name="connect_has">Соединение есть</string>
 </resources>
