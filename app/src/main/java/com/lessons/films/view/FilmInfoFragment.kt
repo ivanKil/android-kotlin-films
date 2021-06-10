@@ -11,7 +11,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.bumptech.glide.Glide
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.lessons.films.R
 import com.lessons.films.databinding.FilmInfoFragmentBinding
 import com.lessons.films.model.FilmDetail
@@ -80,7 +81,12 @@ class FilmInfoFragment : Fragment() {
                             else film.budget.toString() + "$")
             infoGenge.text = film.genres?.map { it.name }?.joinToString()
             infoOverview.text = film.overview
-            Glide.with(infoPoster).load(RetrofitServices.POSTER_BASE_URL + film.poster).centerCrop().into(infoPoster)
+            //Glide.with(infoPoster).load(RetrofitServices.POSTER_BASE_URL + film.poster).centerCrop().into(infoPoster)
+            infoPoster.load(RetrofitServices.POSTER_BASE_URL + film.poster) {
+                crossfade(2000)
+                //scale(Scale.FILL)
+                transformations(RoundedCornersTransformation(5.0F))
+            }
             infoReleseDate.text = String.format(getResources().getString(R.string.release_date), format.format(film.releaseDate))
             infoRunTime.text = String.format(getResources().getString(R.string.run_time), film.runTime.toString())
             infoVote.text = film.voteAverage.toString()

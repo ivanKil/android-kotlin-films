@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.lessons.films.R
 import com.lessons.films.databinding.ItemFilmBinding
 import com.lessons.films.model.Film
@@ -17,7 +17,7 @@ interface OnFilmClicked {
     fun onFavoriteReverse(film: Film)
 }
 
-class FilmsAdapter : RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>() {
+class FilmsAdapter(val glide: RequestManager) : RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>() {
     private var films: MutableList<Film> = mutableListOf()
     private var itemBinding: ItemFilmBinding? = null
     var clickListener: OnFilmClicked? = null
@@ -40,7 +40,8 @@ class FilmsAdapter : RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>() {
                     tvVote.setText(film.voteAverage.toString())
                 if (film.favorite)
                     favoriteImg.setImageResource(R.drawable.favorite_fill_24)
-                Glide.with(poster).load(RetrofitServices.POSTER_BASE_URL + film.poster).centerCrop().into(poster)
+                //Glide.with(poster)
+                glide.load(RetrofitServices.POSTER_BASE_URL + film.poster).centerCrop().into(poster)
             }
         }
     }

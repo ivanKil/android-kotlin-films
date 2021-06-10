@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.lessons.films.R
 import com.lessons.films.databinding.FilmsLentaBinding
@@ -19,7 +20,7 @@ import com.lessons.films.model.FilmDetail
 
 
 open class FilmsLenta : Fragment() {
-    private val filmsAdapter = FilmsAdapter()
+    private val filmsAdapter: FilmsAdapter by lazy { FilmsAdapter(Glide.with(this)) }
     var binding: FilmsLentaBinding? = null
     protected val viewModel: MainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
     protected var appState: AppState? = null
