@@ -19,4 +19,11 @@
     <string name="dont_know">неизвестно</string>
     <string name="no_connect">Соединения нет</string>
     <string name="connect_has">Соединение есть</string>
+    <string name="action_adult">Показывать фильмы для взрослых</string>
+    <string name="search_result">Результат поиска</string>
+    <string name="note_text_hint">Текст заметки</string>
+    <string name="save_note">Сохранить</string>
+    <string name="cancel">Закрыть</string>
+    <string name="history">Просмотренные</string>
+    <string name="showed">Просмотрено: %1$s</string>
 </resources>

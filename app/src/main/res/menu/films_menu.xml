@@ -15,6 +15,11 @@
         android:id="@+id/action_sort_by_date"
         android:title="@string/action_sort_by_date"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_adult"
+        android:title="@string/action_adult"
+        android:checkable="true"
+        app:showAsAction="never"/>
 
 
 </menu>

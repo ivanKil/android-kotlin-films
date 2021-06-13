@@ -18,14 +18,14 @@ import com.lessons.films.databinding.FilmInfoFragmentBinding
 import com.lessons.films.model.FilmDetail
 import com.lessons.films.network.*
 import com.lessons.films.snackBarError
-import com.lessons.films.snackBarIntRes
 import java.text.SimpleDateFormat
 
 class FilmInfoFragment : Fragment() {
     private var binding: FilmInfoFragmentBinding? = null
     private val format = SimpleDateFormat("dd.MM.yyyy")
+    private val formatDateTime = SimpleDateFormat("dd.MM.yyyy HH:mm")
     private var film: FilmDetail? = null
-    private val viewModel: MainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
+    private val viewModel: MainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
     private val loadResultsReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -33,6 +33,7 @@ class FilmInfoFragment : Fragment() {
                 requireView().snackBarError(intent.getStringExtra(DETAILS_LOAD_ERROR))
             } else if (intent.getParcelableExtra<FilmDetail>(DETAILS_LOAD_RESULT_EXTRA) != null) {
                 setData(intent.getParcelableExtra(DETAILS_LOAD_RESULT_EXTRA))
+                viewModel.saveFilmDetailToDB(film!!)
             }
         }
     }
@@ -40,7 +41,7 @@ class FilmInfoFragment : Fragment() {
 
     companion object {
         const val BUNDLE_EXTRA: String = "extra_film"
-        fun newInstance(bundle: Bundle) = FilmInfoFragment().apply { arguments = bundle }
+        //fun newInstance(bundle: Bundle) = FilmInfoFragment().apply { arguments = bundle }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,9 +56,11 @@ class FilmInfoFragment : Fragment() {
         filmArg?.let { fimArg ->
             setData(filmArg)
             binding!!.infoFavoriteImg.setOnClickListener {
-                requireView().snackBarIntRes(R.string.click_heart)
+                viewModel.setFavorite(filmArg.id, !film!!.favorite)
+                setFavoritePic(false)
             }
-
+            if (filmArg.inDb)
+                viewModel.requestFilmDetailFromDb(filmArg.id)
             context?.let {
                 LocalBroadcastManager.getInstance(it)
                         .registerReceiver(loadResultsReceiver, IntentFilter(DETAILS_INTENT_FILTER))
@@ -66,13 +69,23 @@ class FilmInfoFragment : Fragment() {
                     putExtra(FILM_ID_EXTRA, filmArg.id)
                 })
             }
+            //setFavoritePic(filmArg.favorite)
+            viewModel.requestIsFavoriteFromDb(filmArg.id)
         }
         viewModel.liveDataFilmDetail.observe(viewLifecycleOwner, ::setData)
         viewModel.liveDataError.observe(viewLifecycleOwner, view::snackBarError)
+        viewModel.liveDataFavorite.observe(viewLifecycleOwner, ::setFavoritePic)
+    }
+
+    private fun setFavoritePic(isFavorite: Boolean) {
+        film!!.favorite = isFavorite
+        binding?.apply {
+            infoFavoriteImg.setImageResource(if (isFavorite) R.drawable.favorite_fill_24 else R.drawable.favorites_24)
+        }
     }
 
     private fun setData(film: FilmDetail) {
-        this.film = film
+        this.film = film.apply { favorite = this@FilmInfoFragment.film?.favorite ?: false }
         binding?.apply {
             infoName.text = film.name
             infoBudget.text =
@@ -91,13 +104,23 @@ class FilmInfoFragment : Fragment() {
             infoRunTime.text = String.format(getResources().getString(R.string.run_time), film.runTime.toString())
             infoVote.text = film.voteAverage.toString()
             infoOverview.text = film.overview
-            infoFavoriteImg.setImageResource(if (film.favorite) R.drawable.favorite_fill_24 else R.drawable.favorites_24)
+            //infoFavoriteImg.setImageResource(if (film.favorite) R.drawable.favorite_fill_24 else R.drawable.favorites_24)
+            infoNote.setOnClickListener { NoteFragment.newInstance(film).show(childFragmentManager, "EDIT_TAG") }
+            infoSaveDate.visibility = if (film.saveDate == null) View.GONE else View.VISIBLE
+            film.saveDate?.let {
+                infoSaveDate.text =
+                        String.format(getResources().getString(R.string.showed),
+                                formatDateTime.format(film.saveDate)
+                        )
+            }
         }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         context?.let { LocalBroadcastManager.getInstance(it).unregisterReceiver(loadResultsReceiver) }
+        viewModel.liveDataFilmDetail.removeObservers(this)
         binding = null
     }
 }

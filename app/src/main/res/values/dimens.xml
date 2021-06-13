@@ -6,9 +6,11 @@
     <dimen name="card_bottom">5dp</dimen>
     <dimen name="favorite_size">40dp</dimen>
     <dimen name="tv_add_text">30sp</dimen>
+    <dimen name="save_date">12sp</dimen>
     <dimen name="card_padding">2dp</dimen>
     <dimen name="card_width">120dp</dimen>
     <dimen name="card_height">250dp</dimen>
     <dimen name="vote_info_size">20sp</dimen>
     <dimen name="info_padding">5dp</dimen>
+    <dimen name="edit_note">35dp</dimen>
 </resources>

@@ -1,8 +1,10 @@
 package com.lessons.films
 
+import android.content.Context
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
@@ -28,6 +30,15 @@ fun View.snackBarReady() =
 fun View.snackBarIntRes(stringResId: Int) =
         Snackbar.make(this, resources.getString(stringResId), Snackbar.LENGTH_SHORT).show()
 
+fun View.hideKeyboard(): Boolean {
+    try {
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        return inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+    } catch (ignored: RuntimeException) {
+    }
+    return false
+}
+
 class MainActivity : AppCompatActivity() {
     private val receiver = NetworkChangeReceiver()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_films, R.id.navigation_favorites))
+                R.id.navigation_films, R.id.navigation_favorites, R.id.navigation_history))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 

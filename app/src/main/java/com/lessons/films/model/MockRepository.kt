@@ -76,7 +76,7 @@ class MockRepository : Repository {
         TODO("Not yet implemented")
     }
 
-    override fun searchFilms(filmName: String): Observable<List<Film>> {
+    override fun searchFilms(filmName: String, includeAdult: Boolean): Observable<List<Film>> {
         TODO("Not yet implemented")
     }
 

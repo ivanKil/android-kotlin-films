@@ -26,6 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/favorites_24" />
 
+
     <ImageView
         android:id="@+id/info_poster"
         android:layout_width="0dp"
@@ -39,6 +40,15 @@
         tools:background="@drawable/ic_launcher_background"
         android:paddingEnd="@dimen/info_padding"
         app:layout_constraintBottom_toTopOf="@id/info_scroll" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/info_note"
+        android:layout_width="@dimen/edit_note"
+        android:layout_height="@dimen/edit_note"
+        android:background="@drawable/ic_baseline_edit_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/list_margin_left"
+        app:layout_constraintBottom_toBottomOf="@id/info_poster" />
 
     <TextView
         android:id="@+id/info_genge"
@@ -99,7 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/info_save_date"
         app:layout_constraintTop_toBottomOf="@id/info_poster">
 
         <TextView
@@ -109,4 +119,14 @@
             tools:text="Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения."
             android:textSize="@dimen/vote_info_size" />
     </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/info_save_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Просмотрено 23.09.2021"
+        android:textSize="@dimen/save_date"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

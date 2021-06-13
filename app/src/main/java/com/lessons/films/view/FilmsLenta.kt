@@ -20,7 +20,7 @@ import com.lessons.films.model.FilmDetail
 
 
 open class FilmsLenta : Fragment() {
-    private val filmsAdapter: FilmsAdapter by lazy { FilmsAdapter(Glide.with(this)) }
+    private val filmsAdapter: FilmsAdapter by lazy { FilmsAdapter(Glide.with(this), viewModel) }
     var binding: FilmsLentaBinding? = null
     protected val viewModel: MainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
     protected var appState: AppState? = null
@@ -63,17 +63,19 @@ open class FilmsLenta : Fragment() {
         setTitle()
         filmsList.layoutManager = getRecyclerViewLayout()
         filmsAdapter.clickListener = object : OnFilmClicked {
-            override fun onFilmClicked(film: Film) =
-                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                            .navigate(R.id.navigation_film_info,
-                                    Bundle().apply { putParcelable(FilmInfoFragment.BUNDLE_EXTRA, FilmDetail.instanceFromfilm(film)) })
-
-
-            override fun onFavoriteReverse(film: Film) =
-                    viewModel.updateFilm(film.copy().apply { favorite = !favorite })
+            override fun onFilmClicked(film: Film) = actOnClick(film)
+            override fun onFavoriteReverse(film: Film) {}
         }
 
         filmsList.adapter = filmsAdapter
+    }
+
+    private fun actOnClick(film: Film) {
+        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                .navigate(R.id.navigation_film_info,
+                        Bundle().apply {
+                            putParcelable(FilmInfoFragment.BUNDLE_EXTRA, FilmDetail.instanceFromfilm(film))
+                        })
     }
 
     protected fun renderData(appState: AppState) {

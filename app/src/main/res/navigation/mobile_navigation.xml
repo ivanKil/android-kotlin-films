@@ -18,9 +18,19 @@
         tools:layout="@layout/films_lenta" />
 
     <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.lessons.films.view.FilmsHistory"
+        android:label="@string/history"
+        tools:layout="@layout/films_lenta" />
+
+    <fragment
         android:id="@+id/navigation_film_info"
         android:name="com.lessons.films.view.FilmInfoFragment"
-        android:label="@string/favorites"
         tools:layout="@layout/film_info_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_films_searched"
+        android:name="com.lessons.films.view.FilmsSearched"
+        tools:layout="@layout/films_lenta" />
 
 </navigation>

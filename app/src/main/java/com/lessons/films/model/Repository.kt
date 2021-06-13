@@ -11,5 +11,5 @@ interface Repository {
 
     fun getFilmDetails(filmId: Int): Observable<FilmDetail>
 
-    fun searchFilms(filmName: String): Observable<List<Film>>
+    fun searchFilms(filmName: String, includeAdult: Boolean = false): Observable<List<Film>>
 }

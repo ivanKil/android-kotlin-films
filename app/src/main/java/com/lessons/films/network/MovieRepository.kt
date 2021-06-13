@@ -28,8 +28,8 @@ class MovieRepository(val apiService: RetrofitServices) : Repository {
             apiService.getFilmDetails(filmId).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
 
-    override fun searchFilms(filmName: String): Observable<List<Film>> =
-            apiService.searchFilms(filmName).observeOn(AndroidSchedulers.mainThread())
+    override fun searchFilms(filmName: String, includeAdult: Boolean): Observable<List<Film>> =
+            apiService.searchFilms(filmName, includeAdult).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .flatMap { result -> Observable.fromCallable { result.results } }
 

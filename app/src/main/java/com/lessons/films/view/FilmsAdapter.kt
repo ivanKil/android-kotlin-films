@@ -17,7 +17,7 @@ interface OnFilmClicked {
     fun onFavoriteReverse(film: Film)
 }
 
-class FilmsAdapter(val glide: RequestManager) : RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>() {
+class FilmsAdapter(val glide: RequestManager, var viewModel: MainViewModel?) : RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>() {
     private var films: MutableList<Film> = mutableListOf()
     private var itemBinding: ItemFilmBinding? = null
     var clickListener: OnFilmClicked? = null
@@ -38,9 +38,9 @@ class FilmsAdapter(val glide: RequestManager) : RecyclerView.Adapter<FilmsAdapte
                     imgStar.visibility = View.GONE
                 else
                     tvVote.setText(film.voteAverage.toString())
-                if (film.favorite)
-                    favoriteImg.setImageResource(R.drawable.favorite_fill_24)
-                //Glide.with(poster)
+                viewModel!!.requestIsFavoriteById(film.id).subscribe {
+                    if (it) favoriteImg.setImageResource(R.drawable.favorite_fill_24)
+                }
                 glide.load(RetrofitServices.POSTER_BASE_URL + film.poster).centerCrop().into(poster)
             }
         }
@@ -69,5 +69,6 @@ class FilmsAdapter(val glide: RequestManager) : RecyclerView.Adapter<FilmsAdapte
 
     fun removeListener() {
         clickListener = null
+        viewModel = null
     }
 }

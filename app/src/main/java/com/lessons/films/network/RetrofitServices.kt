@@ -35,7 +35,7 @@ interface RetrofitServices {
 
     @GET("search/movie")
     fun searchFilms(
-            @Query("query") query: String? = null,
+            @Query("query") query: String? = null, @Query("include_adult") include_adult: Boolean = false
     ): Observable<FilmsResponse>
 
     companion object Factory {
