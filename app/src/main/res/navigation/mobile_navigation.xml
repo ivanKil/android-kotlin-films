@@ -33,4 +33,9 @@
         android:name="com.lessons.films.view.FilmsSearched"
         tools:layout="@layout/films_lenta" />
 
+    <fragment
+        android:id="@+id/navigation_contacts"
+        android:name="com.lessons.films.view.contacts.ContactsFragment"
+        tools:layout="@layout/films_lenta" />
+
 </navigation>

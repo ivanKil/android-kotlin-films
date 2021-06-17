@@ -26,4 +26,14 @@
     <string name="cancel">Закрыть</string>
     <string name="history">Просмотренные</string>
     <string name="showed">Просмотрено: %1$s</string>
+    <string name="contacts">Контакты</string>
+    <string name="contact_access">Доступ к контактам</string>
+    <string name="contact_access_reason">Для отображения контактов необходим доступ к контактам. Дадите разрешение?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="contact_access_explaning">Без доступа к контактам контакты отображены не будут</string>
+    <string name="close">Закрыть</string>
+    <string name="chose_phone">Выберите телефон для звонка</string>
+    <string name="call_refused">Звонки запрещены</string>
+    <string name="call_refused_text">Вы запретили звонки в разрешениях</string>
 </resources>

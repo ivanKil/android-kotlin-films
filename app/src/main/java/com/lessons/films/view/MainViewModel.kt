@@ -1,7 +1,10 @@
 package com.lessons.films.view
 
 import android.app.Application
+import android.content.ContentResolver
 import android.content.Context
+import android.database.Cursor
+import android.provider.ContactsContract
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.lessons.films.App.Companion.getHistoryDao
@@ -136,5 +139,48 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 }, {
                     liveDataError.value = it.message
                 })
+    }
+
+    fun getPhones(cr: ContentResolver, contactId: String): List<String> {
+        val list = mutableListOf<String>()
+        val phones: Cursor? = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null)
+        phones?.let {
+            while (phones.moveToNext()) {
+                list.add(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)))
+            }
+        }
+        phones?.close()
+        return list
+    }
+
+    fun getContacts(): List<FilmContact> {
+        getApplication<Application>().applicationContext?.let {
+            // Получаем ContentResolver у контекста
+            val contentResolver: ContentResolver = it.contentResolver
+            // Отправляем запрос на получение контактов и получаем ответ в виде Cursor'а
+            val cursorWithContacts: Cursor? = contentResolver.query(
+                    ContactsContract.Contacts.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    ContactsContract.Contacts.DISPLAY_NAME + " ASC"
+            )
+            val list = mutableListOf<FilmContact>()
+            cursorWithContacts?.let { cursor ->
+                for (i in 0..cursor.count) {
+                    // Переходим на позицию в Cursor'е
+                    if (cursor.moveToPosition(i)) {
+                        // Берём из Cursor'а столбец с именем
+                        val name =
+                                cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                        list.add(FilmContact(name, getPhones(contentResolver, cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)))))
+                    }
+                }
+            }
+            cursorWithContacts?.close()
+            return list;
+        }
+        return listOf()
     }
 }
