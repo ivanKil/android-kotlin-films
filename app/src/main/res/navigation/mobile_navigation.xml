@@ -35,7 +35,14 @@
 
     <fragment
         android:id="@+id/navigation_contacts"
+        android:label="@string/contacts"
         android:name="com.lessons.films.view.contacts.ContactsFragment"
         tools:layout="@layout/films_lenta" />
+
+    <fragment
+        android:id="@+id/navigation_map"
+        android:label="@string/map"
+        android:name="com.lessons.films.view.map.MapsFragment"
+        tools:layout="@layout/fragment_maps" />
 
 </navigation>

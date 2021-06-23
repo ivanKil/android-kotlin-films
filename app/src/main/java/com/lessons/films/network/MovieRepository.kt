@@ -9,28 +9,31 @@ import io.reactivex.schedulers.Schedulers
 
 class MovieRepository(val apiService: RetrofitServices) : Repository {
     override fun getNowPlayingFilms(): Observable<List<Film>> =
-            apiService.getPlayingNow(1/*FIXME страницы*/).observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .flatMap { result ->
-                        Observable.fromCallable { result.results }
-                    }
+        apiService.getPlayingNow(1/*FIXME страницы*/).observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .flatMap { result ->
+                Observable.fromCallable { result.results }
+            }
 
     override fun updateFilm(film: Film) {
         //System.out.println("xc")
     }
 
     override fun getUpcomingFilms(): Observable<List<Film>> =
-            apiService.getUpcoming(1/*FIXME страницы*/).observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .flatMap { result -> Observable.fromCallable { result.results } }
+        apiService.getUpcoming(1/*FIXME страницы*/).observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .flatMap { result -> Observable.fromCallable { result.results } }
 
     override fun getFilmDetails(filmId: Int): Observable<FilmDetail> =
-            apiService.getFilmDetails(filmId).observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
+        apiService.getFilmDetails(filmId).observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
 
     override fun searchFilms(filmName: String, includeAdult: Boolean): Observable<List<Film>> =
-            apiService.searchFilms(filmName, includeAdult).observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .flatMap { result -> Observable.fromCallable { result.results } }
+        apiService.searchFilms(filmName, includeAdult).observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .flatMap { result -> Observable.fromCallable { result.results } }
 
+    override fun getActorDetails(actorId: Int) =
+        apiService.getActorDetails(actorId).observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
 }

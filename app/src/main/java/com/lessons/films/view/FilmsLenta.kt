@@ -22,13 +22,19 @@ import com.lessons.films.model.FilmDetail
 open class FilmsLenta : Fragment() {
     private val filmsAdapter: FilmsAdapter by lazy { FilmsAdapter(Glide.with(this), viewModel) }
     var binding: FilmsLentaBinding? = null
-    protected val viewModel: MainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
+    protected val viewModel: MainViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(
+            MainViewModel::class.java
+        )
+    }
     protected var appState: AppState? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        binding = FilmsLentaBinding.inflate(inflater, container, false);
-        return binding!!.root;
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FilmsLentaBinding.inflate(inflater, container, false)
+        return binding!!.root
     }
 
     open fun setTitle() = binding!!.tvTitleList.setText(R.string.now_playing)
@@ -72,10 +78,10 @@ open class FilmsLenta : Fragment() {
 
     private fun actOnClick(film: Film) {
         Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                .navigate(R.id.navigation_film_info,
-                        Bundle().apply {
-                            putParcelable(FilmInfoFragment.BUNDLE_EXTRA, FilmDetail.instanceFromfilm(film))
-                        })
+            .navigate(R.id.navigation_film_info,
+                Bundle().apply {
+                    putParcelable(FilmInfoFragment.BUNDLE_EXTRA, FilmDetail.instanceFromfilm(film))
+                })
     }
 
     protected fun renderData(appState: AppState) {
@@ -89,8 +95,12 @@ open class FilmsLenta : Fragment() {
             is AppState.Loading -> binding!!.filmsProgress.visibility = View.VISIBLE
             is AppState.Error -> {
                 binding!!.filmsProgress.visibility = View.GONE
-                Snackbar.make(requireView(), resources.getString(R.string.error) + ": " + appState.error.message, Snackbar.LENGTH_INDEFINITE)
-                        .setAction(resources.getString(R.string.reload_again)) { requestData() }.show()
+                Snackbar.make(
+                    requireView(),
+                    resources.getString(R.string.error) + ": " + appState.error.message,
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    .setAction(resources.getString(R.string.reload_again)) { requestData() }.show()
             }
         }
     }

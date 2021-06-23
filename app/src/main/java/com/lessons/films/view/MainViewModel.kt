@@ -32,13 +32,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     val liveDataError = MutableLiveData<String>()
-    val pref = getApplication<Application>().applicationContext.getSharedPreferences("qwer", Context.MODE_PRIVATE)
+    val pref = getApplication<Application>().applicationContext.getSharedPreferences(
+        "qwer",
+        Context.MODE_PRIVATE
+    )
 
     fun requestNowPlayingFilms(filmName: String? = null) {
         stateLiveData.value = AppState.Loading
         repository.getNowPlayingFilms().subscribe(
-                { stateLiveData.postValue(AppState.Success(it)) },
-                { stateLiveData.value = AppState.Error(it) })
+            { stateLiveData.postValue(AppState.Success(it)) },
+            { stateLiveData.value = AppState.Error(it) })
     }
 
     fun updateFilm(film: Film) {
@@ -55,23 +58,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun requestUpcomingFilms() {
         stateLiveDataUpcoming.value = AppState.Loading
         repository.getUpcomingFilms().subscribe(
-                { stateLiveDataUpcoming.postValue(AppState.Success(it)) },
-                { stateLiveDataUpcoming.value = AppState.Error(it) })
+            { stateLiveDataUpcoming.postValue(AppState.Success(it)) },
+            { stateLiveDataUpcoming.value = AppState.Error(it) })
     }
 
     fun requestFavoritesFilms() {
         stateLiveDataFavorites.value = AppState.Loading
         historyRepository.getFavorites().subscribe(
-                {
-                    stateLiveDataFavorites.postValue(
-                            AppState.Success(it.map {
-                                Film.instanceFromFilmDetail(it)
-                            }))
-                },
-                {
-                    it.printStackTrace()
-                    stateLiveDataFavorites.value = AppState.Error(it)
-                })
+            {
+                stateLiveDataFavorites.postValue(
+                    AppState.Success(it.map {
+                        Film.instanceFromFilmDetail(it)
+                    })
+                )
+            },
+            {
+                it.printStackTrace()
+                stateLiveDataFavorites.value = AppState.Error(it)
+            })
     }
 
     fun requestIsFavoriteById(id: Int) = historyRepository.getFavoriteById(id)
@@ -79,8 +83,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun requestFilmDetail(filmId: Int) {
         repository.getFilmDetails(filmId).subscribe(
-                { liveDataFilmDetail.postValue(it) },
-                { liveDataError.value = it.message })
+            { liveDataFilmDetail.postValue(it) },
+            { liveDataError.value = it.message })
     }
 
 
@@ -97,7 +101,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun saveAdult(hasAdult: Boolean) = pref.edit().putBoolean(HAS_ADULT, hasAdult).apply()
 
     fun saveNote(id: Int, text: String) =
-            historyRepository.saveEntity(FilmNote(id, text))
+        historyRepository.saveEntity(FilmNote(id, text))
 
 
     fun saveFilmDetailToDB(filmDetail: FilmDetail) {
@@ -110,41 +114,44 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun requestFilmsHistory() {
         //liveDataFilmsHistory.value = AppState.Success(historyRepository.getAllHistory().map { Film.instanceFromFilmDetail(it) })
         historyRepository.getAllHistory().subscribe({
-            liveDataFilmsHistory.value = AppState.Success(it.map { Film.instanceFromFilmDetail(it) })
+            liveDataFilmsHistory.value =
+                AppState.Success(it.map { Film.instanceFromFilmDetail(it) })
         }, { liveDataError.value = it.message })
     }
 
     fun requestFilmDetailFromDb(id: Int) {
         historyRepository.getFilmDetailById(id)
-                .subscribe({ liveDataFilmDetail.value = it },
-                        { liveDataError.value = it.message })
+            .subscribe({ liveDataFilmDetail.value = it },
+                { liveDataError.value = it.message })
     }
 
     fun requestFilmNoteFromDb(id: Int) {
         historyRepository.getFilmNoteById(id)
-                .subscribe({
-                    liveDataFilmNote.value = it
-                }, { liveDataError.value = it.message })
+            .subscribe({
+                liveDataFilmNote.value = it
+            }, { liveDataError.value = it.message })
     }
 
     fun setFavorite(id: Int, isFavorite: Boolean) =
-            historyRepository.setFavorite(FavoriteID(id), isFavorite)
-                    .subscribe({ requestIsFavoriteFromDb(id) },
-                            { liveDataError.value = it.message })
+        historyRepository.setFavorite(FavoriteID(id), isFavorite)
+            .subscribe({ requestIsFavoriteFromDb(id) },
+                { liveDataError.value = it.message })
 
     fun requestIsFavoriteFromDb(id: Int) {
         historyRepository.getFavoriteById(id)
-                .subscribe({
-                    liveDataFavorite.value = it
-                }, {
-                    liveDataError.value = it.message
-                })
+            .subscribe({
+                liveDataFavorite.value = it
+            }, {
+                liveDataError.value = it.message
+            })
     }
 
     fun getPhones(cr: ContentResolver, contactId: String): List<String> {
         val list = mutableListOf<String>()
-        val phones: Cursor? = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null)
+        val phones: Cursor? = cr.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null
+        )
         phones?.let {
             while (phones.moveToNext()) {
                 list.add(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)))
@@ -160,11 +167,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val contentResolver: ContentResolver = it.contentResolver
             // Отправляем запрос на получение контактов и получаем ответ в виде Cursor'а
             val cursorWithContacts: Cursor? = contentResolver.query(
-                    ContactsContract.Contacts.CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    ContactsContract.Contacts.DISPLAY_NAME + " ASC"
+                ContactsContract.Contacts.CONTENT_URI,
+                null,
+                null,
+                null,
+                ContactsContract.Contacts.DISPLAY_NAME + " ASC"
             )
             val list = mutableListOf<FilmContact>()
             cursorWithContacts?.let { cursor ->
@@ -173,8 +180,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     if (cursor.moveToPosition(i)) {
                         // Берём из Cursor'а столбец с именем
                         val name =
-                                cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                        list.add(FilmContact(name, getPhones(contentResolver, cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)))))
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                        list.add(
+                            FilmContact(
+                                name,
+                                getPhones(
+                                    contentResolver,
+                                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                                )
+                            )
+                        )
                     }
                 }
             }
@@ -182,5 +197,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             return list;
         }
         return listOf()
+    }
+
+    fun getActorPlaceOfBirth(actorId: Int, actOnLoad: (placeOfBirth: String) -> Unit) {
+        repository.getActorDetails(actorId).subscribe({
+            if (it.placeOfBirth != null)
+                actOnLoad(it.placeOfBirth)
+            else
+                actOnLoad("")
+        },
+            { liveDataError.value = it.message })
     }
 }

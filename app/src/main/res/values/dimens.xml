@@ -13,4 +13,5 @@
     <dimen name="vote_info_size">20sp</dimen>
     <dimen name="info_padding">5dp</dimen>
     <dimen name="edit_note">35dp</dimen>
+    <integer name="actor_padding">20</integer>
 </resources>
