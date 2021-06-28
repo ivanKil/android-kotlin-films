@@ -20,3 +20,5 @@ local.properties
 apikey.properties
 /app/src/debug/res/values/*.*
 /app/google-services.json
+/app/androidkeystorage.jks
+/app/paid/release/*.*

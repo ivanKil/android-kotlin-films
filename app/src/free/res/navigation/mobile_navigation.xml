@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_films">
+
+    <fragment
+        android:id="@+id/navigation_films"
+        android:name="com.lessons.films.view.HomeFragment"
+        android:label="@string/title_list"
+        tools:layout="@layout/films_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.lessons.films.view.FilmsHistory"
+        android:label="@string/history"
+        tools:layout="@layout/films_lenta" />
+
+    <fragment
+        android:id="@+id/navigation_film_info"
+        android:name="com.lessons.films.view.FilmInfoFragment"
+        tools:layout="@layout/film_info_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_films_searched"
+        android:name="com.lessons.films.view.FilmsSearched"
+        tools:layout="@layout/films_lenta" />
+
+    <fragment
+        android:id="@+id/navigation_contacts"
+        android:label="@string/contacts"
+        android:name="com.lessons.films.view.contacts.ContactsFragment"
+        tools:layout="@layout/films_lenta" />
+
+    <fragment
+        android:id="@+id/navigation_map"
+        android:label="@string/map"
+        android:name="com.lessons.films.view.map.MapsFragment"
+        tools:layout="@layout/fragment_maps" />
+
+</navigation>
