@@ -51,7 +51,7 @@ fun View.hideKeyboard(): Boolean {
 
 data class Cinema(val name: String, val latitude: Double, val longitude: Double)
 
-class MainActivity : AppCompatActivity() {
+open class MainActivityBasic : AppCompatActivity() {
     private val receiver = NetworkChangeReceiver()
     private val geo = Geo(this)
     val showerMyPosition = GeoMyPosition(this)
@@ -62,12 +62,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_films, R.id.navigation_favorites, R.id.navigation_history,
-                R.id.navigation_contacts, R.id.navigation_map
-            )
-        )
+        val appBarConfiguration = AppBarConfiguration(menuElements())
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -77,6 +72,12 @@ class MainActivity : AppCompatActivity() {
         showerMyPosition.checkPermission()
         //getFirebaseMessageToken()
     }
+
+    open fun menuElements() = setOf(
+        R.id.navigation_films
+        //, R.id.navigation_favorites, R.id.navigation_history,
+        //R.id.navigation_contacts, R.id.navigation_map
+    )
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
