@@ -3,6 +3,7 @@ package com.lessons.films
 import android.content.Context
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -11,8 +12,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import com.lessons.films.connectcheck.NetworkChangeReceiver
 import com.lessons.films.view.map.Geo
 import com.lessons.films.view.map.GeoMyPosition
@@ -72,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, intentFilter)
         geo.initGeofence()
         showerMyPosition.checkPermission()
+        //getFirebaseMessageToken()
     }
 
     override fun onRequestPermissionsResult(
@@ -88,5 +92,15 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(receiver)
         geo.removeGeofences()
         super.onDestroy()
+    }
+
+    fun getFirebaseMessageToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("TAG", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+            Log.d("TAG---------", task.result)
+        })
     }
 }

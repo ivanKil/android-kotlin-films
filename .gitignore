@@ -19,3 +19,4 @@ local.properties
 /target/**
 apikey.properties
 /app/src/debug/res/values/*.*
+/app/google-services.json

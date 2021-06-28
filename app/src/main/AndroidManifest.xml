@@ -22,7 +22,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Films">
-
+        <service
+            android:name=".notifications.FilmsFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -60,7 +63,6 @@
             android:name=".view.map.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
-
     </application>
 
 </manifest>
