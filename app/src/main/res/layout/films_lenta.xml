@@ -1,0 +1,40 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/films_lenta_id"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/fragmentBackground">
+
+    <TextView
+        android:id="@+id/tv_title_list"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/list_layot"
+        android:textSize="@dimen/tv_add_text"
+        android:text="@string/now_playing" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_layot"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_list"
+        android:layout_height="0dp" />
+
+    <ProgressBar
+        android:id="@+id/films_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/list_layot"
+        app:layout_constraintEnd_toEndOf="@+id/list_layot"
+        app:layout_constraintStart_toStartOf="@+id/list_layot"
+        app:layout_constraintTop_toTopOf="@+id/list_layot"
+        tools:visibility="visible" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
