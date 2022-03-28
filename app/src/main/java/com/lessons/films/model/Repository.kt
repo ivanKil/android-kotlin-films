@@ -3,7 +3,7 @@ package com.lessons.films.model
 import io.reactivex.Observable
 
 interface Repository {
-    fun getNowPlayingFilms(): Observable<List<Film>>
+    fun getNowPlayingFilms(pageNum: Int): Observable<List<Film>>
 
     fun updateFilm(film: Film)
 

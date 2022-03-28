@@ -163,7 +163,8 @@ class MockRepository : Repository {
     )
 
 
-    override fun getNowPlayingFilms() = Observable.fromCallable { unmodifiableList(list) }
+    override fun getNowPlayingFilms(pageNum: Int) =
+        Observable.fromCallable { unmodifiableList(list) }
 
     override fun updateFilm(film: Film) {
         val ind = list.indexOf(list.find { it.id == film.id })

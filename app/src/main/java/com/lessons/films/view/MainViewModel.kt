@@ -37,16 +37,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         Context.MODE_PRIVATE
     )
 
-    fun requestNowPlayingFilms(filmName: String? = null) {
+    private var pageNum: Int = 1
+
+    fun requestNowPlayingFilms(filmName: String? = null, pageChange: Int = 0) {
+        val newPageNum = pageNum + pageChange
+        if (newPageNum > 0)
+            pageNum = newPageNum
         stateLiveData.value = AppState.Loading
-        repository.getNowPlayingFilms().subscribe(
+        repository.getNowPlayingFilms(pageNum).subscribe(
             { stateLiveData.postValue(AppState.Success(it)) },
             { stateLiveData.value = AppState.Error(it) })
     }
 
     fun updateFilm(film: Film) {
         repository.updateFilm(film)
-        repository.getNowPlayingFilms().subscribe({
+        repository.getNowPlayingFilms(pageNum).subscribe({
             stateLiveData.value = AppState.Success(it)
         }, { stateLiveData.value = AppState.Error(it) })
 
