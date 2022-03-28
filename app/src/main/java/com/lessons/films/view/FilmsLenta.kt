@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -55,13 +56,16 @@ open class FilmsLenta : Fragment() {
     }
 
     open fun getRecyclerViewLayout(): RecyclerView.LayoutManager {
-        return object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
-            override fun checkLayoutParams(lp: RecyclerView.LayoutParams): Boolean {
-                lp.width = width / 3
-                lp.height = LinearLayout.LayoutParams.MATCH_PARENT
-                return true
+        val layoutManager =
+            object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
+                override fun checkLayoutParams(lp: RecyclerView.LayoutParams): Boolean {
+                    lp.width = width / 3
+                    lp.height = LinearLayout.LayoutParams.MATCH_PARENT
+                    return true
+                }
             }
-        }
+        addPagination()
+        return layoutManager
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,6 +78,30 @@ open class FilmsLenta : Fragment() {
         }
 
         filmsList.adapter = filmsAdapter
+    }
+
+    private fun addPagination() {
+        binding!!.listLayot.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            private var nesdUpdate = false
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == SCROLL_STATE_IDLE) {
+                    val lastvisibleitemposition: Int =
+                        (binding!!.listLayot.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    if (lastvisibleitemposition == filmsAdapter.getItemCount() - 1) {
+                        nesdUpdate = if (nesdUpdate) {
+                            viewModel.requestNowPlayingFilms(pageChange = 1)
+                            false
+                        } else true
+                    } else if ((binding!!.listLayot.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() == 0) {
+                        nesdUpdate = if (nesdUpdate) {
+                            viewModel.requestNowPlayingFilms(pageChange = -1)
+                            false
+                        } else true
+                    }
+                }
+            }
+        })
     }
 
     private fun actOnClick(film: Film) {

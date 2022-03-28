@@ -8,8 +8,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class MovieRepository(val apiService: RetrofitServices) : Repository {
-    override fun getNowPlayingFilms(): Observable<List<Film>> =
-        apiService.getPlayingNow(1/*FIXME страницы*/).observeOn(AndroidSchedulers.mainThread())
+    override fun getNowPlayingFilms(pageNum: Int): Observable<List<Film>> =
+        apiService.getPlayingNow(pageNum).observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .flatMap { result ->
                 Observable.fromCallable { result.results }
